@@ -60,7 +60,7 @@ class BinaryTree {
         return this.root;
     }
 
-    traversal(value) {
+    find(value) {
         let current = this.root;
          
         //traverse the tree from the root 
@@ -86,8 +86,44 @@ class BinaryTree {
         //if data is not found in Tree
         return -1;
     }
+
+    insert(value) {
+        const newNode = new Node(value);
+
+        //if tree is empty
+        if(!this.root) {
+            this.root = newNode;
+        }
+
+        //traverse tree to find spot
+        let current = this.root;
+        
+        while(true) {
+            if(value<current.data) {
+                if(!current.left) {
+                    current.left = newNode;
+                    break;
+                }
+                current = current.left;
+            }
+
+            else if(value>current.data) {
+                if(!current.right) {
+                    current.right = newNode;
+                    break;
+                }
+                current = current.right
+            }
+
+            else {
+                break;
+            }
+        }
+
+    }
 }
 
 const tree = new BinaryTree();
 const arr = [1,2,2,3,3,4,5,6,7,8];
+// const arr = [];
 tree.buildTree(arr);
