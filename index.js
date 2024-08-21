@@ -10,7 +10,8 @@ class BinaryTree {
     constructor() {
         this.root = null;
     }
-    cleanup(arr) {
+
+    _cleanup(arr) {
         //sorting the array
         arr.sort();
 
@@ -30,7 +31,7 @@ class BinaryTree {
 
     
     
-    sortedArrayToBST(arr,start,end) {
+    _sortedArrayToBST(arr,start,end) {
         //base case
         if(start>end) {
             return null;
@@ -45,18 +46,18 @@ class BinaryTree {
         }
 
         //recursively get left and right node
-        node.left = this.sortedArrayToBST(arr,start,mid-1);
-        node.right = this.sortedArrayToBST(arr,mid+1,end);
+        node.left = this._sortedArrayToBST(arr,start,mid-1);
+        node.right = this._sortedArrayToBST(arr,mid+1,end);
 
         return node;
     }
 
     buildTree(array) {
-        const arr = this.cleanup(array);
+        const arr = this._cleanup(array);
         const start = 0;
         const end = arr.length-1;
 
-        this.sortedArrayToBST(arr,start,end);
+        this._sortedArrayToBST(arr,start,end);
         return this.root;
     }
 
@@ -119,7 +120,53 @@ class BinaryTree {
                 break;
             }
         }
+    }
 
+    delete(value) {
+        this.root = this._deleteNode(this.root,value);
+    };
+
+    _deleteNode(root,value) {
+        if(root === null) {
+            return root;
+        }
+
+        else if(root.data > value) {
+            root.left = this._deleteNode(root.left,value)
+        }
+
+        else if(root.data < value) {
+            root.right = this._deleteNode(root.right,value);
+        }
+
+        else {
+            if(!root.left && !root.right) {
+                return null;
+            }
+
+            if(!root.left) {
+                return root.right;
+            }
+
+            if(!root.right) {
+                return root.left;
+            }
+            const minNode = this._findMin(root.right);
+            root.data = minNode.data;
+            root.right = this._deleteNode(root.right, minNode.data);
+        }
+        
+        return root;
+    }
+
+    _findMin(node) {
+        let current = node;
+
+        while(current.left !== null) {
+            current = current.left;
+        }
+
+        return current;
     }
 }
 
