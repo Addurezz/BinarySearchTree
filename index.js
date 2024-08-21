@@ -66,8 +66,6 @@ class BinaryTree {
          
         //traverse the tree from the root 
         while(current) {
-            console.log(current.data)
-
             //return if node with data is found
             if(current.data === value) {
                 return current;
@@ -79,7 +77,7 @@ class BinaryTree {
             }
 
             //traverse to right
-            else if(value > current.data) {
+            if(value > current.data) {
                 current = current.right;
             }
         }
@@ -108,7 +106,7 @@ class BinaryTree {
                 current = current.left;
             }
 
-            else if(value>current.data) {
+            if(value>current.data) {
                 if(!current.right) {
                     current.right = newNode;
                     break;
@@ -123,6 +121,9 @@ class BinaryTree {
     }
 
     delete(value) {
+        if(!this.find(value)) {
+            return -1;
+        }
         this.root = this._deleteNode(this.root,value);
     };
 
@@ -167,6 +168,107 @@ class BinaryTree {
         }
 
         return current;
+    }
+
+    levelOrder(callback) {
+        if(this.root===null) {
+            return null;
+        }
+
+        let result = [];
+        let queue = [this.root];
+
+        while(queue.length>0) {
+            const level = [];
+
+            for(let i=0; i<queue.length;i++) {
+                const node = queue.shift();
+
+                level.push(node.data);
+
+                if(node.left) {
+                    queue.push(node.left);
+                }
+
+                if(node.right) {
+                    queue.push(node.right);
+                }
+
+            }
+
+            result.push(level);
+        }
+        return result
+    }
+
+    preOrder(callback,root=this.root) {
+        if(!root) {
+            return [];
+        }
+        let result = [root.data];
+
+        result.push(...this.preOrder(root.left));
+        result.push(...this.preOrder(root.right));
+
+        return result;
+    }
+
+    inOrder(root=this.root) {
+        if(!root) {
+            return [];
+        }
+
+        let result = [...this.inOrder(root.left),root.data,...this.inOrder(root.right)];
+
+        return result;
+    }
+
+    postOrder(root=this.root) {
+        if(!root) {
+            return [];
+        }
+
+        let result = [...this.postOrder(root.left),...this.postOrder(root.right), root.data];
+
+        return result;
+    }
+
+    height(node=this.root) {
+        if(!node) {
+            return -1;
+        }
+
+        const leftHeight = this.height(node.left);
+        const rightHeight = this.height(node.right);
+
+        return Math.max(leftHeight,rightHeight) + 1;
+    }
+
+    depth(node) {
+        if(!node) {
+            return -1;
+        }
+
+        let current = this.root;
+        let depth = 0;
+
+        while(current) {
+            if(current.data===node.data) {
+                return depth
+            }
+
+            if(node.data < current.data) {
+                current = current.left;
+            }
+
+            if(node.data > current.data) {
+                current = current.right;
+            }
+
+            depth++;
+        }
+
+        return -1;
     }
 }
 
