@@ -37,7 +37,7 @@ class BinaryTree {
             return null;
         }
 
-        var mid = Math.ceil((start+end)/2);
+        var mid = Math.floor((start+end)/2);
         var node = new Node(arr[mid]);
 
         //set root of tree
@@ -170,7 +170,7 @@ class BinaryTree {
         return current;
     }
 
-    levelOrder(callback) {
+    levelOrder() {
         if(this.root===null) {
             return null;
         }
@@ -184,7 +184,7 @@ class BinaryTree {
             for(let i=0; i<queue.length;i++) {
                 const node = queue.shift();
 
-                level.push(node.data);
+                level.push(callback(node.data));
 
                 if(node.left) {
                     queue.push(node.left);
@@ -201,7 +201,7 @@ class BinaryTree {
         return result
     }
 
-    preOrder(callback,root=this.root) {
+    preOrder(root=this.root) {
         if(!root) {
             return [];
         }
@@ -233,7 +233,7 @@ class BinaryTree {
         return result;
     }
 
-    height(node=this.root) {
+    height(node) {
         if(!node) {
             return -1;
         }
@@ -269,6 +269,28 @@ class BinaryTree {
         }
 
         return -1;
+    }
+
+    isBalanced(node) {
+        if(!node) {
+            return {height: -1, balanced: true};
+        }
+
+        const left = this.isBalanced(node.left);
+        const right = this.isBalanced(node.right);
+        
+        const height = Math.max(left,right) + 1;
+
+        if(Math.abs(left.height - right.height) > 1 && left.balanced && right.balanced) {
+            return false;
+        }
+
+        return {height, balanced};
+    }
+
+    balance() {
+        const arr = this.inOrder();
+        return this.buildTree(arr);
     }
 }
 
